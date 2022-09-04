@@ -1,0 +1,15 @@
+.timer {
+  display: flex;
+  align-items: flex-end;
+}
+.field {
+  margin-top: 10px;
+  padding: 5px;
+  font-family: 'Times New Roman', Times, serif;
+  text-align: center;
+  border: cadetblue solid 1px;
+  border-radius: 20px 20px 0 0;
+}
+.field:not(:last-child) {
+  margin-right: 2px;
+}

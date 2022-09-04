@@ -4,38 +4,37 @@ const refs = {
   form: document.querySelector('.form'),
 };
 
-refs.form.addEventListener('submit', onFormSubmit);
+refs.form.addEventListener('submit', getDataFromAllFields);
 
-function onFormSubmit(e) {
+function getDataFromAllFields(e) {
   e.preventDefault();
 
-  let totalDelay = Number(e.currentTarget.elements['delay'].value);
-  const stepDelay = Number(e.currentTarget.elements['step'].value);
-  const amount = Number(e.currentTarget.elements['amount'].value);
-
-  if (totalDelay < 0 || stepDelay < 0 || amount < 0) {
-    Notify.failure('Все значения должны быть больше 0');
-    return;
-  }
+  let toatalDelay = +refs.form.querySelector('[name="delay"]').value;
+  const step = +refs.form.querySelector('[name="step"]').value;
+  const amount = +refs.form.querySelector('[name="amount"]').value;
 
   for (let i = 1; i <= amount; i += 1) {
-    const promise = createPromise(i, totalDelay);
-    promise
+    createPromise(i, toatalDelay)
       .then(({ position, delay }) => {
-        Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+        Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`, {
+          position: 'center-center',
+        });
       })
       .catch(({ position, delay }) => {
-        Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+        Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`, {
+          position: 'center-center',
+        });
       });
-    totalDelay += stepDelay;
-    console.log(i, totalDelay);
+
+    toatalDelay += step;
   }
-  e.currentTarget.reset();
+  e.target.reset();
 }
 
 function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
-  const promise = new Promise((resolve, reject) => {
+
+  return (promise = new Promise((resolve, reject) => {
     setTimeout(() => {
       if (shouldResolve) {
         resolve({ position, delay });
@@ -43,7 +42,5 @@ function createPromise(position, delay) {
         reject({ position, delay });
       }
     }, delay);
-  });
-
-  return promise;
+  }));
 }
